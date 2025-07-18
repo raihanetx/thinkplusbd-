@@ -255,10 +255,6 @@
                 <label for="productCategory">Category:</label>
                 <select id="productCategory" required>
                     <option value="" disabled selected>Select a category</option>
-                    <option value="course">Course</option>
-                    <option value="subscription">Subscription</option>
-                    <option value="software">Software</option>
-                    <option value="ebook">Ebook</option>
                 </select>
             </div>
             <div class="form-group" id="priceGroup">
@@ -295,6 +291,7 @@
         </div>
     </div>
 
+    <script src="categories.js"></script>
     <script>
         // Product Card Generator Script
         const form = document.getElementById('productForm');
@@ -308,6 +305,18 @@
         const generatedCodeContainer = document.getElementById('generatedCodeContainer');
         const generatedCodeElement = document.getElementById('generatedCode');
         const copyCodeBtn = document.getElementById('copyCodeBtn');
+
+        function populateCategoryDropdown() {
+            const categorySelect = document.getElementById('productCategory');
+            if (!categorySelect) return;
+
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.name.toLowerCase();
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
+            });
+        }
 
         categorySelect.addEventListener('change', function() {
             if (this.value === 'subscription') {
@@ -415,6 +424,10 @@
             productPriceInput.required = false;
             if (durationsContainer.children.length === 0) addDurationField();
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            populateCategoryDropdown();
+        });
 
         // --- Image URL Generator Script (UPDATED) ---
         const folderNameInput = document.getElementById('folderName');

@@ -1186,27 +1186,8 @@ src="https://www.facebook.com/tr?id=482675157669768&ev=PageView&noscript=1"
             <div class="container">
                  <h2 class="category-section-title">Product Categories</h2>
             </div>
-            <section class="categories container">
-                <div class="category" onclick="navigateTo('products', 'course')">
-                    <div class="category-icon-wrapper"><i class="fas fa-graduation-cap category-icon-fa" aria-hidden="true"></i></div>
-                    <p class="category-name">Course</p>
-                    <p class="category-subtitle" id="category-count-course">0 Premium Courses</p>
-                </div>
-                <div class="category" onclick="navigateTo('products', 'subscription')">
-                    <div class="category-icon-wrapper"><i class="fas fa-key category-icon-fa" aria-hidden="true"></i></div>
-                    <p class="category-name">Subscription</p>
-                    <p class="category-subtitle" id="category-count-subscription">0 Premium Services</p>
-                </div>
-                <div class="category" onclick="navigateTo('products', 'software')">
-                    <div class="category-icon-wrapper"><i class="fas fa-laptop-code category-icon-fa" aria-hidden="true"></i></div>
-                    <p class="category-name">Software</p>
-                    <p class="category-subtitle" id="category-count-software">0 Bundle Packages</p>
-                </div>
-                <div class="category" onclick="navigateTo('products', 'ebook')">
-                    <div class="category-icon-wrapper"><i class="fas fa-book-open category-icon-fa" aria-hidden="true"></i></div>
-                    <p class="category-name">Ebook</p>
-                    <p class="category-subtitle" id="category-count-ebook">0 Digital Guides</p>
-                </div>
+            <section class="categories container" id="category-container">
+                <!-- Category cards will be dynamically inserted here -->
             </section>
 
             <section class="product-listings container">
@@ -1719,6 +1700,7 @@ src="https://www.facebook.com/tr?id=482675157669768&ev=PageView&noscript=1"
 
     <div id="toast" class="toast"></div>
 
+    <script src="categories.js"></script>
     <script>
         // --- START OF FILE script.js ---
 
@@ -2748,8 +2730,46 @@ Microsoft-এর অফিসিয়াল Activation Key, ইমেইলে ড
             bottomNavItems.forEach(item => { item.classList.remove('active'); if (item.dataset.page === activePage || (activePage === 'productDetail' && item.dataset.page === 'products') || (activePage === 'cart' && item.dataset.page === 'products') ) { item.classList.add('active'); } });
         }
 
+        function generateCategoryCards() {
+            const container = document.getElementById('category-container');
+            if (!container) return;
+
+            categories.forEach(category => {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'category';
+                categoryCard.setAttribute('onclick', `navigateTo('products', '${category.name.toLowerCase()}')`);
+
+                const iconWrapper = document.createElement('div');
+                iconWrapper.className = 'category-icon-wrapper';
+                const icon = document.createElement('i');
+                icon.className = `${category.icon} category-icon-fa`;
+                icon.setAttribute('aria-hidden', 'true');
+                iconWrapper.appendChild(icon);
+
+                const categoryName = document.createElement('p');
+                categoryName.className = 'category-name';
+                categoryName.textContent = category.name;
+
+                const categorySubtitle = document.createElement('p');
+                categorySubtitle.className = 'category-subtitle';
+                categorySubtitle.id = `category-count-${category.name.toLowerCase()}`;
+
+                // The count will be updated later by updateCategoryCountsInDOM
+                const count = allProductsData.filter(p => p.category === category.name.toLowerCase()).length;
+                categorySubtitle.textContent = `${count} ${category.subtitle}`;
+
+
+                categoryCard.appendChild(iconWrapper);
+                categoryCard.appendChild(categoryName);
+                categoryCard.appendChild(categorySubtitle);
+
+                container.appendChild(categoryCard);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('DOM fully loaded and parsed');
+            generateCategoryCards();
             setupEventListeners(); 
             loadCartFromLocalStorage(); 
             loadOrdersFromLocalStorage(); 
