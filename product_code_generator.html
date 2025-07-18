@@ -202,6 +202,31 @@
     </style>
 </head>
 <body>
+    <!-- New Category Generator Section -->
+    <div class="container" id="categoryGeneratorContainer">
+        <h2 class="section-title">New Category Generator</h2>
+        <form id="categoryForm">
+            <div class="form-group">
+                <label for="categoryName">Category Name:</label>
+                <input type="text" id="categoryName" required placeholder="e.g., New Category">
+            </div>
+            <div class="form-group">
+                <label for="categoryIcon">Category Icon (Font Awesome Class):</label>
+                <input type="text" id="categoryIcon" required placeholder="e.g., fas fa-star">
+            </div>
+            <div class="form-group">
+                <label for="categorySubtitle">Category Subtitle:</label>
+                <input type="text" id="categorySubtitle" required placeholder="e.g., Awesome new items">
+            </div>
+            <button type="submit">Generate Category Code</button>
+        </form>
+        <div id="generatedCategoryCodeContainer" class="hidden">
+            <h3>Generated Category Code:</h3>
+            <pre><code id="generatedCategoryCode"></code></pre>
+            <button type="button" id="copyCategoryCodeBtn">Copy Category Code</button>
+        </div>
+    </div>
+
     <!-- Image URL Generator Section -->
     <div class="container" id="imageGeneratorContainer">
         <h2 class="section-title">Image URL Generator</h2>
@@ -438,6 +463,43 @@
         const copyImgUrlBtn = document.getElementById('copyImgUrlBtn');
         const productImageInputForCard = document.getElementById('productImage');
         const DEFAULT_HOST_PATH = "";
+
+        // Category Generator Script
+        const categoryForm = document.getElementById('categoryForm');
+        const generatedCategoryCodeContainer = document.getElementById('generatedCategoryCodeContainer');
+        const generatedCategoryCodeElement = document.getElementById('generatedCategoryCode');
+        const copyCategoryCodeBtn = document.getElementById('copyCategoryCodeBtn');
+
+        categoryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const categoryName = document.getElementById('categoryName').value;
+            const categoryIcon = document.getElementById('categoryIcon').value;
+            const categorySubtitle = document.getElementById('categorySubtitle').value;
+
+            const newCategory = {
+                name: `"${categoryName}"`,
+                icon: `"${categoryIcon}"`,
+                subtitle: `"${categorySubtitle}"`
+            };
+
+            let codeString = `{\n`;
+            codeString += `    name: ${newCategory.name},\n`;
+            codeString += `    icon: ${newCategory.icon},\n`;
+            codeString += `    subtitle: ${newCategory.subtitle}\n`;
+            codeString += `},`;
+
+            generatedCategoryCodeElement.textContent = codeString;
+            generatedCategoryCodeContainer.classList.remove('hidden');
+        });
+
+        copyCategoryCodeBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(generatedCategoryCodeElement.textContent)
+                .then(() => alert('Category code copied to clipboard!'))
+                .catch(err => {
+                    console.error('Failed to copy category code: ', err);
+                    alert('Failed to copy category code. Please copy manually.');
+                });
+        });
 
         // Function to generate the path
         function generatePath() {
