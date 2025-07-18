@@ -18,5 +18,10 @@ const categories = [
         name: "Ebook",
         icon: "fas fa-book-open",
         subtitle: "Digital Guides"
+    },
+    {
+        name: "yddydy",
+        icon: "Hallo ",
+        subtitle: "This is a test category "
     }
 ];
